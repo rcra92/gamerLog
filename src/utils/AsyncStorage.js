@@ -1,16 +1,13 @@
 import AsyncStorage from '@react-native-community/async-storage';
+import _ from 'lodash'
 
 export async function storeData(value, callback = null) {
   let favorites = await getData();
   favorites = favorites ? await JSON.parse(favorites) : []
   await favorites.push(value)
-  try {
-    await AsyncStorage.setItem('favorites', JSON.stringify(favorites), () => {
-        callback ? callback() : null
-    });
-  } catch (e) {
-    console.warn('FAIL');
-  }
+    await persistData(favorites)
+    callback()
+    return
 }
 
 export async function getData() {
@@ -22,12 +19,20 @@ export async function getData() {
   }
 }
 
-export async function removeValue(key) {
-  try {
-    await AsyncStorage.removeItem(key);
-  } catch (e) {
-    // remove error
-  }
+export async function removeValue(value) {
+    let favorites = await getData();
+    favorites = await JSON.parse(favorites)
+    console.log('>>>>>>', favorites, value)
+    await _.pullAll(favorites, value)
+    console.log('>>>>>>', favorites, value)
+    await persistData(favorites)
+    return
+}
 
-  console.log('Done.');
+async function persistData(favorites) {
+    try {
+        await AsyncStorage.setItem('favorites', JSON.stringify(favorites))
+    } catch (e) {
+        console.warn('FAIL');
+    }
 }

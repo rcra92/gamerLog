@@ -14,7 +14,9 @@ class FavoritesScreen extends React.Component {
     };
   }
   componentDidMount() {
-    this.getFavorites();
+    this.sub = this.props.navigation.addListener('willFocus', () => {
+      this.getFavorites();
+    });
   }
 
   async getFavorites() {
@@ -33,16 +35,21 @@ class FavoritesScreen extends React.Component {
         <StatusBar barStyle="default" />
         <FlatList
           data={this.state.favorites}
-          ListEmptyComponent={() => <Text>Você não possui nenhum favorito</Text>}
+          ListEmptyComponent={() => (
+            <Text>Você não possui nenhum favorito</Text>
+          )}
           renderItem={({item}) => {
             return (
               <GameCard
                 title={item.title}
                 backgroundImage={item.backgroundImage}
                 navigation={this.props.navigation}
+                action={'removeValue'}
                 slug={item.slug}
                 liked={1}
                 screenshots={item.screenshots}
+                platforms={item.platforms}
+                rating={item.rating}
               />
             );
           }}

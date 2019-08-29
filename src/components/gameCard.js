@@ -1,15 +1,27 @@
 import React, {Component} from 'react';
-import {TouchableNativeFeedback} from 'react-native';
-import {Card} from 'react-native-elements';
+import {
+  TouchableOpacity,
+  View,
+  Image,
+  Text,
+  ImageBackground,
+} from 'react-native';
+import {Card, Icon, Badge} from 'react-native-elements';
 
 import LottieView from 'lottie-react-native';
-import {storeData} from '../utils/AsyncStorage';
+import {storeData, removeValue} from '../utils/AsyncStorage';
+import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
+import PlatformIcons from './platformIcons';
+import LinearGradient from 'react-native-linear-gradient';
 
 export default class GameCard extends Component {
   render() {
-    console.log(this);
+    const actions = {
+      storeData: () => storeData(this.props, () => this.animation.play()),
+      removeValue: () => removeValue(this.props),
+    };
     return (
-      <TouchableNativeFeedback
+      <TouchableOpacity
         onPress={() => {
           this.props.navigation.navigate('Details', {
             title: this.props.slug,
@@ -17,26 +29,66 @@ export default class GameCard extends Component {
           });
         }}
         containerStyle={{height: 500}}
-        style={{flex: 1}}>
-        <Card
-          image={{uri: this.props.backgroundImage}}
-          featuredTitle={this.props.title}>
-          <TouchableNativeFeedback
-            onPress={() => {
-              storeData(this.props, () => this.animation.play());
+        style={{flex: 1, backgroundColor: 'red'}}>
+        <Card>
+          <View
+            style={{
+              flex: 1,
+              backgroundColor: 'rgba(0, 0, 0, .2)',
+              alignItems: 'center',
+              justifyContent: 'center',
             }}
-            style={{flex: 1}}>
-            <LottieView
-              ref={animation => {
-                this.animation = animation;
+          />
+          <ImageBackground
+            source={{uri: this.props.backgroundImage}}
+            style={{height: 300, width: '100%'}}>
+            <TouchableOpacity
+              onPress={() => {
+                actions[this.props.action]();
               }}
-              style={{height: 100, width: 100}}
-              progress={this.props.liked || 0}
-              source={require('../assets/heart.json')}
-            />
-          </TouchableNativeFeedback>
+              style={{
+                flex: 1,
+                backgroundColor: 'rgba(0, 0, 0, .2)',
+                alignItems: 'center',
+                justifyContent: 'center',
+              }}>
+              <LottieView
+                ref={animation => {
+                  this.animation = animation;
+                }}
+                style={{
+                  zIndex: 100,
+                  position: 'absolute',
+                  bottom: '50%',
+                  left: '55%',
+                  color: 'white',
+                  height: 100,
+                  width: 100,
+                }}
+                progress={this.props.liked || 0}
+                source={require('../assets/heart.json')}
+              />
+              <Text
+                style={{
+                  fontSize: 22,
+                  marginBottom: 8,
+                  color: 'white',
+                  fontWeight: '800',
+                }}>
+                {this.props.title}
+              </Text>
+            </TouchableOpacity>
+          </ImageBackground>
+          <PlatformIcons
+            platforms={this.props.platforms}
+            rating={this.props.rating}
+            playtime={this.props.playtime}
+            comments={this.props.comments_count}
+            released={this.props.released}
+            genres={this.props.genres}
+          />
         </Card>
-      </TouchableNativeFeedback>
+      </TouchableOpacity>
     );
   }
 }

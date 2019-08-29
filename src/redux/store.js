@@ -8,14 +8,15 @@ import {
   fetchDetails,
 } from './reducers/reducer';
 
-export const getGames = () => {
+export const getGames = (params = {text: 'gta%20v'}) => {
   return async dispatch => {
     try {
       const gamesRequest = await fetch(
-        'https://api.rawg.io/api/games?page_size=5&search=gta%20v',
+        `https://api.rawg.io/api/games?search=${params.text}`,
       );
       dispatch(fetchData(true));
       const games = await gamesRequest.json();
+      console.log(games);
       dispatch(fetchDataFulfilled(games.results));
     } catch (error) {
       dispatch(fetchDataError(error));
@@ -31,7 +32,6 @@ export const getDetails = game => {
       );
       dispatch(fetchData(true));
       const people = await starWarsPromise.json();
-      console.log('people-----------', people);
       dispatch(fetchDetails(people));
     } catch (error) {
       dispatch(fetchDataError(error));
