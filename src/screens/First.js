@@ -1,17 +1,11 @@
 import React, {Component} from 'react';
-import {
-  StatusBar,
-  View,
-  FlatList,
-  ActivityIndicator,
-  TouchableHighlight,
-  Text,
-} from 'react-native';
+import {StatusBar, View, FlatList, ActivityIndicator} from 'react-native';
 import {SearchBar} from 'react-native-elements';
-
-import {getGames} from './src/redux/store';
 import {connect} from 'react-redux';
-import GameCard from './src/components/gameCard';
+import _ from 'lodash';
+
+import {getGames} from '../redux/actions';
+import GameCard from '../components/gameCard';
 
 class First extends Component {
   static navigationOptions = ({navigation}) => {
@@ -34,10 +28,12 @@ class First extends Component {
         <SearchBar
           clearIcon={false}
           cancelIcon={false}
-          onChangeText={text => {
-            this.searchGames(text);
-          }}
-          placeholder="Type Here..."
+          containerStyle={{backgroundColor: 'tomato'}}
+          inputContainerStyle={{backgroundColor: '#FF917E'}}
+          inputStyle={{color: 'white'}}
+          placeholderTextColor={'white'}
+          onChangeText={text => this.searchGames(text)}
+          placeholder="Search games"
           value={this.state.search}
         />
       </View>
@@ -46,12 +42,18 @@ class First extends Component {
 
   searchGames(text) {
     this.setState({search: text});
-    this.props.getGames({text: text});
+    setTimeout(() => {
+      this.props.getGames({text: text});
+    }, 300);
   }
 
   render() {
-    if (this.props.loading && !this.props.games) {
-      return <ActivityIndicator />;
+    if (_.isEmpty(this.props.games)) {
+      return (
+        <View style={{flex: 1, alignItems: 'center', justifyContent: 'center'}}>
+          <ActivityIndicator size={'large'} />
+        </View>
+      );
     }
     return (
       <View style={{flex: 1, backgroundColor: 'whitesmoke'}}>
@@ -74,6 +76,7 @@ class First extends Component {
                 released={item.released}
                 comments={item.comments_count}
                 playtime={item.playtime}
+                liked={item.liked}
               />
             );
           }}

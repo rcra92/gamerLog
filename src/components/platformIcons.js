@@ -1,9 +1,7 @@
 import React, {Component} from 'react';
-import {TouchableNativeFeedback, View, Text} from 'react-native';
-import {Card, Icon, Rating, Badge} from 'react-native-elements';
+import {View, Text} from 'react-native';
+import {Rating, Badge} from 'react-native-elements';
 
-import LottieView from 'lottie-react-native';
-import {storeData, removeValue} from '../utils/AsyncStorage';
 import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
 import _ from 'lodash';
 
@@ -58,7 +56,7 @@ export default class PlatformIcons extends Component {
       return <View />;
     }
     return (
-      <View style={{flexDirection: 'column'}}>
+      <View>
         <View style={{flexDirection: 'row', justifyContent: 'space-between'}}>
           <View style={{flexDirection: 'row'}}>
             {this.state.platforms.map((platform, index) => {

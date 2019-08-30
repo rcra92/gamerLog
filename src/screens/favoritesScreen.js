@@ -1,11 +1,22 @@
 import React, {Component} from 'react';
 import {connect} from 'react-redux';
 import {StatusBar, View, FlatList, Text} from 'react-native';
-import GameCard from './gameCard';
+import GameCard from '../components/gameCard';
 
 import {getData} from '../utils/AsyncStorage';
 
-class FavoritesScreen extends React.Component {
+class FavoritesScreen extends Component {
+  static navigationOptions = ({navigation}) => {
+    return {
+      title: 'Favorites',
+      headerStyle: {
+        backgroundColor: 'tomato',
+      },
+      headerTitleStyle: {
+        color: 'white',
+      },
+    };
+  };
   constructor(props) {
     super(props);
 
@@ -31,12 +42,15 @@ class FavoritesScreen extends React.Component {
 
   render() {
     return (
-      <View style={{flex: 1, backgroundColor: 'blue'}}>
+      <View style={{flex: 1, backgroundColor: 'whitesmoke'}}>
         <StatusBar barStyle="default" />
         <FlatList
           data={this.state.favorites}
           ListEmptyComponent={() => (
-            <Text>Você não possui nenhum favorito</Text>
+            <View
+              style={{flex: 1, alignItems: 'center', justifyContent: 'center'}}>
+              <Text>Você não possui nenhum favorito</Text>
+            </View>
           )}
           renderItem={({item}) => {
             return (
@@ -46,10 +60,14 @@ class FavoritesScreen extends React.Component {
                 navigation={this.props.navigation}
                 action={'removeValue'}
                 slug={item.slug}
-                liked={1}
                 screenshots={item.screenshots}
                 platforms={item.platforms}
                 rating={item.rating}
+                genres={item.genres}
+                released={item.released}
+                comments={item.comments_count}
+                playtime={item.playtime}
+                liked={1}
               />
             );
           }}

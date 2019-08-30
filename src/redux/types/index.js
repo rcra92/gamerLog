@@ -1,0 +1,5 @@
+export const GET_GAME = 'GET_GAME';
+export const GET_GAME_FULFILLED = 'GET_GAME_FULFILLED';
+export const GET_GAME_ERROR = 'GET_GAME_ERROR';
+export const GET_GAME_DETAILS = 'GET_GAME_DETAILS';
+export const GET_GAME_RELATED = 'GET_GAME_RELATED';
